@@ -1,0 +1,155 @@
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\selectlanguage{polish}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan
+}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage[export]{adjustbox}
+\usepackage{wrapfig}
+\usepackage[nofoot,hdivide={0cm,*,1cm},vdivide={0cm,*,0cm}]{geometry}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{sectsty}
+\sectionfont{\fontsize{12}{8}\selectfont}
+\subsectionfont{\fontsize{10}{8}\selectfont}
+\usepackage[extreme]{savetrees}
+\pagestyle{empty}
+\usepackage{titlesec}
+\titlespacing*{\section}{0pt}{0.1ex}{0.1ex}
+\titlespacing*{\subsection}{0pt}{0.1ex}{0.1ex}
+\titlespacing*{\subsubsection}{0pt}{0.1ex}{0.1ex}
+
+\title{Ściomga}
+\author{minion.chomiczewski }
+\date{November 2022}
+\begin{document}
+\setlength{\abovedisplayskip}{0.0pt}
+\setlength{\belowdisplayskip}{0.0pt}
+\setlength{\tabcolsep}{0.0pt}
+\begin{minipage}[t]{.325\textwidth}
+\section*{Funkcje całkowitoliczbowe}
+$\lfloor x \rfloor = n \iff n\leq x < n+1$, $\lceil x \rceil = n \iff n-1 < x \leq n$, $\{x\} = x - \lfloor x \rfloor$, $\lfloor -x \rfloor = -\lceil x \rceil$, $\lfloor x + n \rfloor = \lfloor x \rfloor +n$, $\lceil x + n \rceil = \lceil x \rceil + n$, $\lfloor \frac{n}{2} \rfloor + \lceil \frac{n}{2} \rceil = n$\\
+-----------------------------------------------------------
+\section*{Symbole asymptotyczne}
+$f(n) = O(g(n)) \iff \exists_{c>0}\exists_{N \in \mathbb{N}}\forall_{n > N}|f(n)|\leq c\cdot |g(n)|$, $f(n) = \Omega(g(n)) \iff \exists_{c>0}\exists_{N \in \mathbb{N}}\forall_{n > N} |f(n)| \geq c\cdot |g(n)|$, $(n) = \Theta(g(n))\iff \exists_{c,d>0}\exists_{N \in \mathbb{N}}\forall_{n > N} d\cdot |g(n)| \leq |f(n)| \leq c \cdot |g(n)|$, $f(n) \sim g(n) \iff \lim_{n\rightarrow\infty}\frac{f(n)}{g(n)} = 1$, $f(n) = o(g(n)) \iff \lim_{n\rightarrow\infty}\frac{f(n)}{g(n)} = 0$, $1 \prec \log(\log(n)) \prec a\cdot\log(n)\prec n \prec n^a \prec a^n \prec n!$\\
+-----------------------------------------------------------
+\section*{Fibonacci}
+$F_{n+m+} = F_{n}F_{m+1} + F_{n-1}F_{m}$, $F_n = \frac{1}{\sqrt{5}}\cdot\left(\left(\frac{1+\sqrt{5}}{2}\right)^n - \left(\frac{1-\sqrt{5}}{2}\right)^n\right)$\\
+-----------------------------------------------------------
+\section*{Algorytm Karatsuby}
+$M_0 = A_0\cdot B_0, M_1 = A_1 \cdot B_1, M_2 = (A_1 + A_0)\cdot(B_1 + B_0), M = 2^nM_1 + 2^{\frac{n}{2}}(M_2 - M_1 - M_0) + M_0$, Czas: $O(n^{\log3})$\\
+-----------------------------------------------------------
+\section*{Liczby pierwsze}
+Tw. Czybyszewa: $\Pi(n) = \Theta(\frac{n}{\log(n)})$\\
+-----------------------------------------------------------
+\section*{Chinśkie tw. o resztach}
+Niech $x \equiv a_1 \mod m_1, x \equiv a_2 \mod m_2, … , x \equiv a_k \mod m_k $ oraz $m = \prod_{i=1}^k m_i$, wtedy $x = \sum_{i=1}^{k}a_i\left((\frac{m}{m_i})^{-1}\mod m_i\right)\frac{m}{m_i}$\\
+-----------------------------------------------------------
+\section*{Funkcja Eulera}
+$n = p \implies \varphi(n) = p -1$, $n = p^k \implies \varphi(n) = p^{k-1}(p-1)$, $\varphi(n) = \prod_{i=1}^sp_i^{k_i}(1-\frac{1}{p_i})$, Tw. Eulera: $a\bot n \implies a^{\varphi(n)}\mod n = 1$.\\
+-----------------------------------------------------------
+\section*{Zasada szufladkowa}
+Jeśli jest $k\cdot n + 1$ kulek to w pewnej szufladce jest $k+1$ kulek.\\
+-----------------------------------------------------------
+\section*{Znak Newtona}
+$n^{\underline{k}} = \prod_{i = n-k+1}^{n} i = \frac{n!}{(n-k)!}$, $\binom{n}{k} = \frac{n^{\underline{k}}}{k!} = \frac{n!}{k!(n-k)!}$, $\binom{n}{n_1 n_2 … n_k} = \binom{n}{n_1}\binom{n-n_1}{n_2}\binom{n - n_1 - n_2}{n_3}… = \frac{n!}{n_1!n_2!…n_k!}$, $(a+b)^n = \sum_k \binom{n}{k}a^{n-k}b^k$, $\sum_{k}\binom{n}{k} = 2^n$, $\sum_k \binom{n}{k}2^k = \binom{n}{k}1^{n-k}2^k = 3^n$, Tw. $\binom{m}{k} = \binom{m-1}{k} + \binom{m-1}{k-1}$\\
+-----------------------------------------------------------
+\section*{Zasada włączeń i wyłączeń}
+$|A\cup B| = |A| + |B| - |A \cap B|$, $|A_1 \cup A_2 \cup … \cup  A_k| = \sum_{1 \leq i_1 \leq i_2 \leq … \leq i_s \leq k} (-1)^{s+1} |A_{i_1}  \cap … \cap A_{i_s}|$\\
+-----------------------------------------------------------
+\section*{Grupy}
+Niech $H$ będzie podgrupą $G$ wtedy $gH = \{g\cdot h : h \in H\}$, $Hg = \{h\cdot g : h \in H\}$, Lemat: $g_1,g_2 \in G \implies g_1H $ i $g_2H$ są albo rozłączne albo $g_1H = g_2H$. Tw. Langrange'a $|G| = [G:H] \cdot |H|$, $[G:H]$ - liczba warstw wyznaczana przez $H$ na $G$. $|H| \mid |G|$, $G_x = \{g : g(x) = x\}$ - stabilizator $x$, $O_x = \{y:\exists_g g(x) = y\}$ - orbita $x$. $|G| = |O_x| \cdot |G_x|$, $\#orbit  = \frac{1}{|G|}\sum_{g\in G}|Fix(g)|$, gdzie $Fix(g) = \{x:g(x) = x\}$\\
+-----------------------------------------------------------
+
+\end{minipage}
+\begin{minipage}[t]{.01\textwidth}
+|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|
+\end{minipage}
+\begin{minipage}[t]{.33\textwidth}
+\section*{Równiani rekurencyjne}
+Niech $p_ka_{n+k} + p_{k-1}a_{n+k-1} + … + p_0a_n = f(n)$, jeśli $f(n) = 0$ to jest jednorodne.
+\section*{Eliminatory}
+$a_{n+2} - 5a_{n+1} + 6a_n = 0$ wtedy $(E-2)(E-3)<a_n>=0$, zatem wszystkie rozw. rówaniania $a_{n+2} - 5a_{n+1} + 6a_n = 0$ są postaci $A2^n + B3^n$.
+Jeśli np. $(E-1)^4<s_n> = 0$ to ma to rozw. $1^n, n1^n, n^21^n,n^31^n$, wtedy $s_n = An^3 + Bn^2 + Cn + D$.\\
+-----------------------------------------------------------
+\section*{Funkcje tworzące}
+Dany jest nieskończony ciąg $\{a_n\}$ wtedy $A(x) = \sum_{n=0}^{\infty}a_ix^i$, Jeśli $a_n = 1$ to $A(x) = \frac{1}{1-x}$, $b_n = q^n$ to $B(x)  = \frac{1}{1-qx}$, $c_n = \frac{1}{n!}$ to $C(x) = \sum_{i=0}^{\infty} \frac{x^n}{n!} = e^x$, Wykładnicza funkca tworząca $\overline{A}(x) = A_e(x) = \sum_{n=0}^\infty \frac{a_nx^n}{n!}$. Iloczyn szeregów potęgowych $A(x)B(x) = \left(\sum_{i=0}^\infty a_i x^i\right)\cdot\left(\sum_{k=0}^\infty b_k x^k\right) = \sum_{i,k}^\infty a_ib_k x^{i+k} = \sum_{i=0}^\infty\left(\sum_{k=0}^{i} a_kb_{i-k} \right)x^i$ \\
+-----------------------------------------------------------
+\section*{Liczby Catalana}
+$c_0 = 1, c_n = \sum_{i=0}^{n-1}c_{n-i}c_i$, $C(x) = \sum c_n x^n = \sum_{n=0}^{\infty} \frac{1}{n+1}\binom{2n}{n}x^n$ $(C(x))^2 = \frac{C(x)-1}{x}$, $c_n$ opisuje: liczbe drzewech binarnych o $n+1$ liściach; liczbę ciągów z n-zer i n-jedynek gdzie każdy prefiks ma conajmniej tyle samo zer co jedynek.\\
+-----------------------------------------------------------
+\section*{Problem wydawania reszty}
+Gdy mamy skończenie wiele monet i skończoną ich ilość wtedy niech ciąg $\{c_n\}$ opisuje nominały, a ciąg $\{b_n\}$ ilość nominału o indeksie $n$, gdy $a_i$ - liczba sposóbów wypłacenia $i$ to $A(x) = \sum_{n=0}^\infty a_nx^n =$ $ \sum_{0\leq s_1 \leq b_1, ... ,0 \leq s_n \leq b_n}x^{s_1\cdot c_1 + ... + s_n \cdot c_n} =$ $ \sum_{s_1,...,s_n}x^{s_1\cdot c_1}...x^{s_n\cdot c_n}= \frac{1-x^{(b_1+1)\cdot c_1}}{1-x^{c_1}}\cdot ... \cdot \frac{1-x^{(b_n+1)\cdot c_n}}{1-x^{c_n}}$, gdy mamy $\infty$ ilość i skończony zbiór nominałów wtedy $A(x) = \frac{1}{1-x^{c_1}}\cdot...\cdot\frac{1}{1-x^{c_n}}$, gdy mamy $\infty$ ilość oraz każdy nominał naturalny to $A(x) = \prod_{n=1}^\infty\frac{1}{1-x^n}$.\\
+-----------------------------------------------------------
+\section*{Graf}
+Graf prosty nie ma pętli oraz nie ma krawędzi wielokrotnych. $V(G)$ - zbiór wierzchołków grafu $G$, $E(G)$ - zbiór krawędzi grafu $G$. $deg(v)$ - liczba krawędzi incydentnych z wierzhołkiem $v$. Lemat o uścisku dłoni $\sum_{v\in V}deg(v) = 2|E| = 2m$. $n = |V|, m = |E|$. Graf dwudzielny graf który $V(G) = V(A) \cup V(B)$, gdzie $A\cap B = 0$, $E(G) \subseteq A\times B$. Dwudzielny pełny $E(G) = A\times B$, oznaczenie np. $K_{3,3}$, $K_{3,4}$
+\\-----------------------------------------------------------
+\section*{Graf 2}
+Graf spójny wtw dla dowolnego podziału $V$ na rozłączne zbiory $V_1$, $V_2$ istnieje krawędź między $V_1$, $V_2$.
+Dowolny graf idzie przedstawić jako sumę spójnych składowych. Dł. marszruty (trasa) $\equiv$ liczba krawędzi w ciągu krawędzi. $d(m,v)$ - dł. nakrótszej trasy między $m$, a $v$.
+Tw. $G$ jest spójny wtw $G$ jest spójny drogowo tzn. istnieje droga między dowolnymi dwoma wierzchołkami
+\\-----------------------------------------------------------
+\end{minipage}
+\begin{minipage}[t]{.005\textwidth}
+    |\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|
+\end{minipage}
+\begin{minipage}[t]{.33\textwidth}
+\section*{Graf 3}
+Tw. $G$ jest dwudzielny wtw każdy cykl w $G$ ma dł. parzystą. Każdy cykl w $G$ ma dł. parzystą  $\implies$ każda trasa zamknięta w $G$ ma dł. parzystą. Drzewem nazywamy graf prosty spójny bez cykli. Tw. niech $T$ będzie grafem prostym o $n$-wierzchołkach wtedy następująca zdania są równoważne : $T$ jest drzewem. $T$ nie ma cyklu i ma $n-1$ krawędzi. $T$ jest spójny  i ma $n-1$ krawędzi. $T$ jest spójny i każda krawędź jest mostem. Dowolne dwa wierzchołki łączy dokładnie 1 droga. $T$ nie ma cyklu ale dodanie krawędzi zawsze tworzy cykl.
+\\-----------------------------------------------------------
+\section*{Graf 4}
+Lemat: Dowolne drzewo o conajmniej 2 wierczhołkach ma conajmniej 2 liście. Las- graf, którego każda spójna składowa jest drzewem. Drzewo spinające $G$, gdzie $G$ to graf spójny, jest takim drzewem $T$, że $V(G) = V(T)$ i $E(G) \geq E(T)$. Podobnie def. dla lasu spinającego. Tw. Cayley'a liczba drzew o zb. wierzchołków $\{1,2,...,n\}$ wynosi $n^{n-2}$.
+\\-----------------------------------------------------------
+\section*{Graf 5}
+Kod Prufera: Powtarzamy n-2 razy: 1) usuń liść o najmniejszym numerze. 2) Dopisz numer sąsiada tego liścia do kodu Prufera. Droga Eulera - marszruta przechodząca przez wszystkie krawędzie dokładnie raz. Cykl Eulera zamknięta droga Eulera. Tw. Graf $G$ jest eulerowski wtw $\forall_{v \in V} 2\mid deg(v)$ i wszystkie krawędzie są w jednej spójnej składowej. Fakt $G$ ma drogę eulerowską jeśli $G$ ma conajwyżej 2 wierzchołki których $2 \nmid deg(v)$
+\\-----------------------------------------------------------
+\section*{Graf 6}
+Tw. Graf $G$ jest półeulerowski wtw $G$ ma conajwyżej 2 wierzchołki których $2 \nmid deg(v)$ oraz wszystkie krawędzie są w jednej spójnej składowej. Droga Hamiltona - droga przechodząca przez każdy wierzchołek w grafie $G$ dokładnie raz. Cykl Hamiltona - cykl przez każdy wierzchołek w grafie $G$ dokładnie raz. Tw Ore Jeżeli $G$ jest prosty $n(G) \geq 3$ i dla dowolnych nie sąsiednich wierzchołków $u,w$ $deg(u) + deg(v) \geq n$ to $G$ ma cykl Hamiltona.
+\\-----------------------------------------------------------
+\section*{Graf 7}
+Tw Diraca: Jeśli $G$ jesdt prosty i $n(G) \geq 3$ oraz  $\forall_{v\in V} deg(v) \geq \frac{n}{2}$ to $G$ ma cykl Hamiltona. Problem najkrótszego drzewa rozpinającego: ogólny schemat algorytmu: wykonaj serię kroków, w każdym z nich dodaj najkrótszą krawędź między dotychaczas niepołączonymi wierzchołkami do $T$, by nie był cyklu. Przepływ w sieciach: przepływ to funkcja $E \rightarrow \mathbb{R}_{\geq 0}$
+\\-----------------------------------------------------------
+\section*{Graf 8}
+Prawo Kirchhoffa: $\sum_{(u,v)} f(u,v) = \sum_{(v,w)}f(v,w)$.
+Przepustowść krawędzi: $c(u,v)$. 
+Przekrój to para $S,T$, $S \cup T = V, S\cap T = \emptyset $. Pojemność przekroju to $c(s,t) = \sum_{v\in S,u \in T}c(u,v)$. Przepływ netto z $S$ do $T$ $f(S,T) = \sum_{v\in S, u \in T}f(v,u) - \sum_{v\in S, u \in T}f(u,v)$. Lemat: $f(S,T) = \sum_{u\in V} f(s,u) = |f|$. Fakt $c(S,T) \geq f(S,T)$.
+\\-----------------------------------------------------------
+\end{minipage}
+\newpage
+\begin{minipage}[t]{.33\textwidth}
+\section*{Graf 9}
+Ścieżka powiększająca przepływ składa sie z 2 rodz. krawędzi: 1) $(u,v) t. że f(u,v) < c(u,v)$ 2) $(v,u)$ t. że $f(u,v) > 0$ i łączy $s$ z $t$. Tw. Jeśli dla danego przepływu nie istnieje ścieżka powiększająca to przepływ jest największy. Twierdzenie Konig-Egervary: $G$ jest grafem dwudzielnym największe skojarzenie ma moc najmniejszego pokrycia wierzchołkowego.
+\\-----------------------------------------------------------
+\section*{Graf 10}
+Skojarzenie - zbiór krawędzi, z którch żadne 2 nie mają wspólnego końca.
+Pokrycie wierzchołkowe - zbiór wierzchołków takich że każda krawędź ma jeden z końców w tym zbiorze. Graf planarny - graf który da się narysować na płaszczyźnie bez przecięć. Graf płaski - graf, który da się narysować bez przecięć. Tw. Graf zawierający podgraf $K_{3,3}$ bądź $K_{5}$ nie jest planarny.
+\\-----------------------------------------------------------
+\section*{Graf 11}
+Wzór Eulera: Niech $m$-liczba krawędzi, $n$-liczba wierzchołków, $f$-liczba ścian, $n-m+f=2$. Jeśli graf planarny, prosty i spójny i $n>2$ to $m \leq 3n-6$. Lemat każdy graf planarny ma wierzchołek stopnia mniejszego niż 6. Tw. Wierzchołek grafu planarnego można pokolorować na 5 kolorów.  
+\\-----------------------------------------------------------
+\section*{Graf 12}
+Kolorowanie grafu - przyporządkowanie kolorów tak wierzchołkom by żadne 2 sąsiednie nie miały takiego samego koloru. Graf jest $k$ kolorowalny wtw gdy można go pokolorować $K$ kolorami. $\chi(G)$ to minimalna liczba kolorów potrzebna do pokolorawnia $G$.
+Fakty:$\chi(G) 1 \iff G = N_n, \chi(G) = 2 \iff G$ dwudzielny i nie $N_n$
+\\-----------------------------------------------------------
+\section*{Graf 13}
+Zbiór niezależny w $G =$ zbiór wierzchołków wzajemnie niepołączonych krawędziami. Lemat jeżeli $k$ jest moc największego zbioru niezależnego w $G$, to $\chi(G) \geq \frac{n}{k}$. Twierdzenie: $\chi(G) + \chi(\overline{G}) \leq n+1$. Tw. (Brooksa) Jeśli spójny graf $G$ nie jest kliką lub cyklem nieparzystym to $\chi(G) \leq deg(G)$. Tw Halla: W $G$ dla problemu małżeństw istnieje pełne skojarzenie wtw każdy zbiór k dziewcząt dla dowolnego k zna w sumie conajmniej k chłopaków.
+\\-----------------------------------------------------------
+\end{minipage}
+\begin{minipage}[t]{.005\textwidth}
+    |\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|\\|
+\end{minipage}
+\end{document}

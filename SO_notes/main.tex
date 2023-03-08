@@ -1,0 +1,151 @@
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\selectlanguage{polish}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan
+}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage[export]{adjustbox}
+\usepackage{wrapfig}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{sectsty}
+\pagestyle{empty}
+\usepackage{titlesec}
+\usepackage[extreme]{savetrees}
+
+\title{SO notes}
+\author{minion.chomiczewski }
+\date{February 2023}
+
+\begin{document}
+
+%\maketitle
+% \section*{Definicje}\\
+\textbf{Relacja dziecko-rodzic} - każdy proces oprócz inita ma rodzica, inaczej mówiąc każdy proces jest subprocesem innego. 
+\\ \textbf{Identyfikator procesu (PID)} - unikatowy index procesu, maksymalnie może mieć wartość $2^{15} = 32768$ lub $2^{22} = 4194304$.
+\\ \textbf{Identyfikator grupy (PGID)} - unikatowy index grupy do której należy proces, ułatwia to budowanie drzewa procesów oraz ułatwia wysyłanie sygnałów, jak i samą kuminkację między nimi. 
+\\ \textbf{Wątki jądro} - operują w kernelspace, są tworzone przez inne uprzywilejowane wątki. 
+\\ \textbf{Proces zombie} - proces który został "zabity" ale jeszcze nie jest "pogrzebany", inaczej zwolniony proces który pobiera zasoby systemowe. Aby pogrzebać zombie należy w rodzicu zrobić waitpid lub wait albo poczekać aż sam proces się zterminuje i wtedy init go pogrzebie. 
+\\ \textbf{Process sierota} - proces którego rodzic umarł ale jeszcze on działa. Sierota jest "przepina" pod najsilniejszego subprocesa w grupie lub do inita. 
+\\ \textbf{Segmety programu} - definiowane w elfie, zawierajace 1 lub więcej ładowalnych sekcji programu, mają swoje atrybuty i z reguły są ciągłe
+\\ \textbf{pliki odwzorowane w pamięć} - segment w pamięci który ma bezpośrednie mapowanie w nazej pamięci (bajt do bajta)
+\\ \textbf{Zasoby plikopodobne} - zasób mający deskryptor pliku, ale nie będący zwykłym plikiem (np. socket sieciowy)
+\\ \textbf{Gniazdo unix (socket)} - pseudoplik służący do komunikacji sieciowej. Składa się z “2 końców”, czyli urządzenia wysyłającego i otrzymującego dane, każdy socket musi mieć zdefiniowane: jakim typem połączenia się posługuje (TCP/UDP) oraz domena w jakiej działa (rodzina protokołów jaką będzie się posługiwał)
+\\ \textbf{Potok (pipe) FIFO} - mechanizm komunikacji międzyprocesowej. Najczęściej łączy się stdin programu A z stdout B.
+\\ \textbf{Stany procesu:} \textit{Stoppped} - wstrzymany, może zostać wznowiony (np. przez syscall). \textit{Zombie} - zwolniony proces który pobiera zasoby systemowe. \textit{Running}, który się dzieli: Ready - załadowany do pamięci czeka na na wykonanie oraz Executing - proces który obecnie jest wykonywany
+\textit{Uninterruptible (sen nieprzerywalny)} - proces jest zablokowany i nie reaguje na żadne sygnały. \textit{Interruptible (sen przerywalny)} -  proces jest zablokowany, ale może oczekiwać na koniec jakiejś operacji, albo na jakiś sygnał
+\\ \textbf{Zablokowanie sygnału} - niedostarczenie sygnału do procesu aż do momentu odblokowania go przez SO. Dzięki temu nie tracimy informacji o sygnale, a jednocześnie nie musimy na niego reagować w niewygodnym dla nas momencie.
+\\ \textbf{Zignorowanie sygnału} - sytuacja kiedy proces nie ma zdefiniowanego zachowania dla danego sygnału. 
+\\ \textbf{\textit{Sygnału SIGKILL nie da się zablokować. Ignorowanie kończy się zabiciem procesu}}
+\\ \textbf{Elementy dziedziczone po forku}: otwarte deskryptory plików, Real User ID, Real Group ID, Effective User ID, Effective Group ID, Suplementary Group IDs, Process Group ID, Session ID, Controlling Terminal, set-user-ID oraz set-group-ID flags, aktualnie używany plik/folder, root directory, mask do tworzenia plików, maske sygnałową, close-on-exec flags do otwatych plików, środowisko, podłączone współdzielone odcinki pamięci, mapowanie pamięci, ograniczenia zasobów.
+\\ \textbf{Elementy dziedziczone po exec}: process ID, parent ID, real user ID, real group ID, suplementary group IDs, process group ID, session ID, controlling terminal, time left until alarm clock, aktualnie używany plik/folder, root directory, maska do tworzenia plików, blokady plików, mask sygnałowa procesu, ograniczenia zasobów, deskrypoty otwartych plików.
+\\ \textbf{Sygnał oczekujący} -  to sygnały, których dostarczenie jest wstrzymane do momentu wyjścia przez proces z nieprzerywalnego snu
+\\ \textbf{Osierocenie} - parent process terminuje się przed dzieciorem
+\\ \textbf{Zadanie drugoplanowe} - proces/grupa procesów działająca w tle, nie mają dostępu do operacji read/write do tty
+\\ \textbf{Lider sesji} - program zarządzający grupą procesów, czyli sesją (zazwyczaj jest to shell - bash/zsh). Kooperuje z kernelem za pomocą sygnałów, system calli
+\\ \textbf{Terminal sterujący} - urządzenie znakowe, odpowiada za efekt wpisywanych przez nas komend do emulatora terminala, porozumiewa się z procesami, zarządza uprawnieniami (r/w) mówi które są pierwszoplanowe/drugoplanowe.
+\\ \textbf{Tryb kanoniczny terminala} - czyta całe ciągi znaków i je interpretuje.
+\\ \textbf{Tryb niekanoniczny terminala} - czyta pojedyncze znaki i ich interpretuje.
+\\ \textbf{Pseudoterminal} - para urządzeń z komunikacją w dwie strony - master i slave.
+\\ \textbf{Master} - jest od strony użytkownika i przekazuje wszystko do slave
+\\ \textbf{Slave} - służy jako terminal kontrolny, do kórego mogą przyłączać się procesy, pisać, czytać etc.
+\\ \textbf{Script} - podczas sesji terminala loguje wszystkie znaki z input i output queue i zapisuje do pliku
+\\ \textbf{Nieużytek} - nieużywany fragment reprezentacji katalogu - rozmiar wpisu, po którym występuje nieużytek jest większy niż nazwa pliku.
+\\ \textbf{Kompaktowanie} - Operacja, która zmniejsza rozmiar katalogu - usuwane są nieużytki, “uklepujemy” katalog. 
+\\ \textbf{Ścieżka bezwzględna} - Ścieżka zaczynająca się od katalogu /
+\\ \textbf{i-node} - struktura przechowująca metadane
+\\ \textbf{Dowiązania} - Dowiązania są zawsze tworzone do i-node’a, który nie jest dzielony między różnymi systemami plików. W dwóch systemach plików możemy mieć dwa pliki o tym samym numerze i-node.
+\\ \textbf{Memory-mapped files} - Tworzymy region w pamięci i wklejamy tam content jakiegoś pliku albo jego część
+\\ \textbf{Anonymous mappings} - pusty szablon inicjalizowany 0
+\\ \textbf{Odwzorowanie prywatne} - niewidoczne dla innych procesów. Zazwyczaj przy fork-u jest Copy in write
+\\ \textbf{Odwzorowanie dzielone} - widoczne dla innych procesów.
+\\ \textbf{Private mapping file} - głównym zastosowaniem jest zainicjalizowanie obszaru pamięci z zawartości pliku, np. inicjalizacja sekcji text lub data procesu z pliku wykonywalnego lub biblioteki współdzielonej.
+\\ \textbf{Private mapping anonymous} - alokacja nowej pamięci (pustej, tzn. wypełnionej zerami) dla procesu, np. używając malloc(3), który wykorzystuje mmap(2).
+\\ \textbf{Shared mapping file} - przy I/O dla plików dostarczana jest alternatywa dla używania read(2) oraz write(2) lub umożliwienie szybkiej komunikacji międzyprocesowej (IPC) dla procesów niepowiązanych ze sobą
+\\ \textbf{Shared mapping anonymous} - umożliwienie szybkiej komunikacji międzyprocesowej (IPC) dla procesów powiązanych ze sobą
+\\ \textbf{Zbiór roboczy} - zbiór adresów na którym aktualnie pracuje program
+\\ \textbf{Zbiór rezydentny} - część address space procesu która aktualnie znajduje się w pamięci np. skasowane pliki, fork() itd. Więc pamięć zostanie policzona wielokrotnie
+\\ \textbf{Minor page fault} - Kiedy kernel szuka strony o którą prosi proces, ale strona jest juz w pamięci, bo inny proces już ją sprowadził
+\\ \textbf{Major page fault} - Kiedy strona musi zostać sprowadzona z dysku
+\\ \textbf{«mm\_struct::pgd»} - pointer na tablicę stron, tablica stron jest tworzona na podstawie opisu segmentów z mmap
+\\ \textbf{«mm\_struct::mmap»} - pointer na listę segmentów pamięci procesu, każdy segment jest typu vm\_area\_struct
+\\ \textbf{«SEGV\_MAPERR»} - Kiedy odwołamy się do niezmapowanego segmentu pamięci
+\\ \textbf{«SEGV\_ACCERR»} - Kiedy nie mamy uprawnień żeby coś zrobić np. nadpisać .text
+\\ \textbf{Kopiowanie przy zapisie} - technika która mówi o tym, żeby prywatne mappingi były współdzielone z innymi, ale kopiowane w chwili kiedy próbujemy wykonac do niej zapis
+\\ \textbf{Struktura «vm\_area\_struct»}: \textit{«vm\_prot»} - uprawnienia dostępu r/w; \textit{«vm\_flags»} - różne flagi dotyczące np. czy mapping jest shared czy private; \textit{«vm\_start/vm\_end»} - początek/koniec mappingu; \textit{«vm\_nex/vm\_prev»} - następny/poprzedni mapping; \textit{pgd} - pointer na tablicę stron
+\\ \textbf{Stronnicowanie na żądanie} - leniwe sprowadzanie stron z dysku/cache
+\\ \textbf{Fragmentacja wewnętrzna} - kiedy mamy duży wolny blok, ale po zaalokowaniu w nim pamięci requestowanej, duża część tego bloku jest marnowana (bo np. był request 0x20B, a blok miał 0x30B)
+\\ \textbf{Fragmentacja zewnętrza} - kiedy mamy wolne bloki gotowe do alokacji, ale nie możemy ich wziąć do zaalokownia requestu programu (bo np. był za duży) 
+\\ \textbf{Polityka ramps} - programy akumulują struktury monotonicznie przez jakiś czas i trzymają, aż nie będzie potrzebna (zazwyczaj szybko zwalniają)
+\\ \textbf{Polityka peaks} - program gwałtownie alokuje dużo pamięci, wykonuje każdą(?) czynność, a następnie zwalnia pamięć. Zostaje parę bloków które reprezentują rezultat pracy
+\\ \textbf{Polityka plateaus} - szybko alokują, ale nie zwalniają (czasem aż do końca programu)
+\\ \textbf{first-fit} - zobacz liste free bloków i weź pierwszy który pasuje
+\\ \textbf{next-fit} - jak first-fit, ale zacznij szukać od miejsca, gdzie poprzednio skończyliśmy
+\\ \textbf{best-fit} - znajdź taki który zmarnuje najmniej miejsca
+\\ \textbf{gorliwe złączanie} - próbuje od razu połączyć wolne blok “za” i “przed” nim 
+\\ \textbf{Protokoły warstwy łącza} - Warstwa sieciowa wysyła datagramy które wędrują przez wiele routerów będących pomiędzy źródłem a celem. Aby wysyłać pakiety z jednego wierzchołka (hosta lub routera) do drugiego, warstwa sieciowa polega na warstwie łącza i jej protokołach. Warstwa sieciowa w każdym napotkanym wierzchołku przekazuje datagram warstwie łącza, która przekazuje go do innego wierzchołka, z którego znów protokoły warstwy łącza przekazują go do warstwy sieciowej.
+\\ \textbf{Protokoły warstwy sieciowa} - Są one odpowiedzialne za transportowanie pakietów warstwy sieciowej, zwanych datagramami, z jednego hosta do drugiego. Protokoły warstwy transportowej
+przekazują segment warstwy transportowej i adres docelowy do warstwy sieciowej, niemalże jak nadawanie listu na pocztę z czyimś adresem. Warstwa sieciowa, udostępnia wtedy usługę dostarczenia segmentu do warswy transportowej hosta docelowego.
+Jednym z protokołów warstwy transportowej jest protokół IP, który definiuje pola w datagramie, tak jak zachowania ich względem. W tej warstwie są też protokoły, które ustalają ścieżki datagramów
+od źródła do końcowego hosta.
+\\ \textbf{Protokoły warstwy transportowa} - Ich rolą jest transportowanie wiadomości wyższej warstwy - application-layer, pomiędzy endpointami.
+Wyróżniamy dwa takie protokoły - UDP i TCP.
+\\ \textbf{Ramka} - jednostka komunikacji w warstwie łącza.
+Warstwa łącza enkasułuje pakiety z warstwy sieciowej i enkapsułuje je w ramki. Jeśli rozmiar ramki jest zbyt duży, wtedy pakiet może być rozdzielony na mniejsze ramki.
+\\ \textbf{Datagram} - pakiety warstwy sieciowej
+\\ \textbf{Segment} - pojedynczy fragment danych o pojemności 1024 bajtów
+\\ \textbf{Transport Layer} - głównie jak rozumiem tylko dla TCP, tutaj są dane o Flow control oraz rozbijaniu wiadomości na krótsze segmenty
+\\ \textbf{Network Layer} - Przesyłanie tych segmentów Transport Layer między hostami (nazywamy to datagramami)
+\\ \textbf{Link Layer} - przesyłanie datagramów między punktami w naszej ścieżce (tworzy frame’y)
+\\ \textbf{UDP (user datagram protocol)} - protokół bezpołączeniowy, serwer i klient nie tworzą połączenia przed rozpoczęciem transmisji danych; przy użyciu jednego gniazda, możemy komunikować się z wieloma hostami; używamy pary funkcji sendto() i recvfrom(), w których określamy adres hosta do
+którego wysyłamy lub od którego odbieramy dane; brak gwaracji co do kompletności przesłanych danych
+\\ \textbf{TCP (transmission control protocol)} - protokół połączeniowy, serwer i klient tworzą pomiedzy sobą połączenie, gniazdo ma przypisaną informację o parze hostów, które będą się komunikować; odczyty zapisy, wykonywane przy użyciu read, write; odbiór każdego segmentu jest potwierdzany, jeśli brak potwierdzenia - wyślij jeszcze raz
+\\ \textbf{Komunikacja duplexowa (full-duplex)} - w każdej chwili możliwe jest przesyłanie danych w obie strony
+\\ \textbf{Pól duplexowa (half-duplex)} - w danej chwili komunikacja może odbywać się tylko w jedną stronę (wysyłamy/odbieramy naprzemiennie)
+\\ \textbf{Przetwarzanie równoległe} - polega na tworzeniu podprocesów; operuje na innych address space'ach; cieżej jest współdzielić dane i zasoby programu; jednocześnie przetwarzanie wielu zadań (na osobnych procesach)
+\\ \textbf{Przetwarzanie współbieżne} - polega na tworzeniu nowych "unit of execution" w istniejącym już procesie; operuje na tym samym address space; współdzielenie danych nie wymaga żadnych specjalnych operacji; też jednoczesne przetwarzanie zadań, ale na 1 procku, tworzymy po prostu więcej wątków egzekucji procesu, które będą realizowane naprzemiennie
+\\ \textbf{Deadlock} - sytuacja, gdzie 2 wątki (lub więcej) czekają na siebie nawzajem aż np. zwolnią zasób, zasygnalizują zakończenie zadania itp.
+\\ \textbf{Livelock} - taki deadlock tylko stan procesów się zmienia. 2 wątki, aby uniknąć deadlocka, wyłączają swoje działanie lub podejmująinne akcje, ale robią to w tym samym momencie, więc i tak nikt z nich nie idzie dalej (np. jak 2 zasoby chcą się przepuścić przez drzwi nawzajem)
+\\ \textbf{Starvation} - sytuacja, gdzie wątki o większym priorytecie mają dużo do roboty lub jest ich po prostu bardzo dużo i w wyniku tego pojedyncze wątki o mniejszym prio nie dostają czasu procesora
+\\ \textbf{Mount point} - katalog znajdujący się w naszym systemie plików, który odwzorowuje innny system plików. Możemy mieć dostęp do plików zamountowanego systemu przez taki katalog
+\\ \textbf{Pseudo-file system} - system plików, który tak naprawdę nie ma w sobie plików, tylko daje nam takie przeczucie, że ma. Jądro generuje inormacje, które miałyby się w takim pliku znajdować i serwuje je do aplikacji
+\\ \textbf{Blok} - plik dyskowy z ext2 jest podielony na małe sektory zwane blokami. Zazwyczaj mają 1,2,4 kilobajty
+\\ \textbf{Superblock} - przechowuje metadane o systemie plików. Główna kopia jest na offsecie 1024
+\\ \textbf{Grupa bloków} - bloki są złączone w grupę by dostęp był szybszy i powodował mniej fragmentacji. Info o każdej grupie jest w tabelach deskryptorów zaraz za superblokiem 
+\\ \textbf{Tabela deskryptorów grup bloków} - opisuje zawartość i metadane wszytskich grup bloków. Ich kopia jest w parze z kopią superbloków
+\\ \textbf{Hard link} - pointer na inode, jedynie może zmienić się nazwa pliku w katalogu
+\\ \textbf{Symbolic link} - specjalny plik który wskazuje na inny plik. Zawiera absolutną ścieżkę do pliku
+\\ \textbf{Przydatne komendy, które używaliśmy na przestrzeni SO}
+\\ \textbf{strace} - Śledzi wywołania systemowe oraz sygnały w procesie
+\\ \textbf{waitpid} - czekaj aż zginie dziecko o danym PID
+\\ \textbf{proc} - my używaliśmy proc/PID, pozwalało na modyfikację/odczyt parametrów procesu
+\\ \textbf{lsof} - pokaż wszystkie otwarte pliki w systemie plików 
+\\ \textbf{fork} - robimy widelec pog, no chyba standard
+\\ \textbf{dup i dup2} - stwórz kopię deskryptora plików
+\\ \textbf{lseek} - zmiana wskaźnika skąd czytamy plik (jakieś fiku miku można robić że np cofać na początek)
+\\ \textbf{execve} - zmieniamy "mózg" procesu, 
+\\ \textbf{sigwait} - czekaj aż przyjdzie dany sygnał
+\\ \textbf{sigprocmask} - zrób coś z maską sygnałów
+\\ \textbf{ioctl} - systemcall do zarządzania urządzeniami wejścia/wyjścia
+\\ \textbf{stat} - i-node, kto ostatnio modyfikował itp itd, (fstat to jak podamy mu fd)
+\\ \textbf{sbrk} - zwiększ HEAP (STERTĘ) procesu
+\\ \textbf{stos} - jest na górze gdy \textbf{sterta} jest na dole.
+% \\ \textbf{TEST} - DEFAULT
+% \\ \textbf{TEST} - DEFAULT
+% \\ \textbf{TEST} - DEFAULT
+
+\end{document}
